@@ -3,6 +3,13 @@
   "version": "1.0.1",
   "description": "ARK Core plugin that dispatches a `block.missed` event whenever a delegate misses its slot in a round",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArkEcosystem/core-missed-blocks.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ArkEcosystem/core-missed-blocks/issues"
+  },
   "files": [
     "dist"
   ],
