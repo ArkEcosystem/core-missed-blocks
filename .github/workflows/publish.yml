@@ -1,0 +1,60 @@
+name: Publish Package
+
+on:
+    workflow_dispatch:
+
+    push:
+        branches:
+            - main
+            - develop
+
+permissions:
+    id-token: write # OIDC
+    contents: read
+
+jobs:
+    publish:
+        # Only run if commit message starts with 'release:'
+        if: startsWith(github.event.head_commit.message, 'release:') || github.event_name == 'workflow_dispatch'
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                node-version: [24.x]
+
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v7
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  registry-url: "https://registry.npmjs.org/"
+
+            # Ensure npm 11.5.1 or later is installed for Trusted publishing
+            - name: Update npm
+              run: npm install -g npm@11
+
+            - name: Cache yarn modules
+              uses: actions/cache@v6
+              env:
+                  cache-name: cache-yarn-modules
+              with:
+                  path: ~/.cache/yarn
+                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+                  restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+
+            - name: Install dependencies
+              run: yarn install
+
+            - name: Build
+              run: yarn build
+
+            # Published with npm rather than yarn, as yarn v1 does not support OIDC trusted publishing
+            - name: Publish (develop branch)
+              if: github.ref == 'refs/heads/develop'
+              run: npm publish --access=public --tag=next --ignore-scripts
+
+            - name: Publish (main branch)
+              if: github.ref == 'refs/heads/main'
+              run: npm publish --access=public --ignore-scripts
