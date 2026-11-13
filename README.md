@@ -1,4 +1,4 @@
-# core-missed-blocks
+# @arkecosystem/missed-blocks-plugin
 
 An ARK Core (v3) plugin that dispatches a `block.missed` event every time a delegate misses its forging slot.
 
@@ -11,16 +11,16 @@ Because detection relies on the next block arriving, the event fires when the bl
 ## Installation
 
 ```bash
-ark plugin:install core-missed-blocks
+ark plugin:install @arkecosystem/missed-blocks-plugin
 # or, from a local checkout
-yarn build && yarn link   # then `yarn link core-missed-blocks` inside your Core install
+yarn build && yarn link   # then `yarn link @arkecosystem/missed-blocks-plugin` inside your Core install
 ```
 
 Register it in your network's `app.json` (for example `~/.config/ark-core/mainnet/app.json`), under `relay` and/or `core`, **after** `@arkecosystem/core-blockchain`:
 
 ```json
 {
-    "package": "core-missed-blocks",
+    "package": "@arkecosystem/missed-blocks-plugin",
     "options": {
         "enabled": true,
         "emitWhileSyncing": false
@@ -55,7 +55,7 @@ From another plugin:
 
 ```ts
 import { Container, Contracts } from "@arkecosystem/core-kernel";
-import { MissedBlockEvent, MissedBlockPayload } from "core-missed-blocks";
+import { MissedBlockEvent, MissedBlockPayload } from "@arkecosystem/missed-blocks-plugin";
 
 app.get<Contracts.Kernel.EventDispatcher>(Container.Identifiers.EventDispatcherService).listen(
     MissedBlockEvent.Missed, // "block.missed"
