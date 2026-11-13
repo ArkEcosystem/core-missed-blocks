@@ -1,6 +1,6 @@
 {
   "name": "@arkecosystem/missed-blocks-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ARK Core plugin that dispatches a `block.missed` event whenever a delegate misses its slot in a round",
   "license": "MIT",
   "files": [
